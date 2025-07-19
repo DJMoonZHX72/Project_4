@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Selamat Ulang Tahun, Bunda!</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: linear-gradient(to bottom right, #ffe6e6, #fff5f5);
+      color: #333;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 20px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    }
+
+    .glitch-text {
+      font-size: 24px;
+      text-align: center;
+      margin-bottom: 16px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    p {
+      font-size: 18px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+    }
+
+    footer {
+      margin-top: 24px;
+      text-align: center;
+      font-size: 14px;
+      color: #777;
+    }
+    
+    @keyframes fall {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+      }
+    }
+    
+    .confetti {
+      animation-timing-function: ease-out;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <!-- React + Babel -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!-- JSX -->
+  <script type="text/babel">
+    function GlitchTyping({ text, delay = 50 }) {
+      const [display, setDisplay] = React.useState([]);
+      const chars = '░▒▓█▄▀▌■□▚▞▙▛▜▐▔▁▂▃▅▆▇';
+      
+      React.useEffect(() => {
+        let current = [...text].map(c => (c === '\n' ? '\n' : ''));
+        let step = 0;
+        
+        const interval = setInterval(() => {
+          if (step > text.length) {
+            clearInterval(interval);
+            return;
+          }
+          
+          current = current.map((char, i) => {
+            if (i < step) return text[i];
+            if (text[i] === '\n') return '\n';
+            return chars[Math.floor(Math.random() * chars.length)];
+          });
+          
+          setDisplay(current);
+          step++;
+        }, delay);
+        
+        return () => clearInterval(interval);
+      }, [text, delay]);
+      
+      return (
+        <pre style={{
+          whiteSpace: 'pre-wrap',
+          fontFamily: 'monospace',
+          fontSize: '16px',
+          color: '#000',
+        }}>
+          {display.join('')}
+        </pre>
+      );
+    }
+    
+    function spawnConfetti(count = 100) {
+      const colors = ['#FFC0CB', '#FFD700', '#ADFF2F', '#00FFFF', '#FF69B4', '#FF4500'];
+      
+      for (let i = 0; i < count; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = Math.random() * 100 + 'vw';
+        confetti.style.top = '-10px';
+        confetti.style.width = '10px';
+        confetti.style.height = '10px';
+        confetti.style.position = 'fixed';
+        confetti.style.zIndex = '9999';
+        confetti.style.opacity = '0.8';
+        confetti.style.borderRadius = '50%';
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.animation = `fall ${2 + Math.random() * 3}s linear forwards`;
+        document.body.appendChild(confetti);
+        
+        setTimeout(() => confetti.remove(), 5000);
+      }
+    }
+    
+    spawnConfetti();
+
+    function App() {
+      return (
+        <div className="container">
+          <GlitchTyping text="Selamat Ulang Tahun, Bunda!" />
+          <GlitchTyping text="Terima kasih karena sudah jadi Bunda terbaik di dunia. Semoga Bunda sehat selalu, bahagia, dan panjang umur"/>
+          <small>
+            - Raffasya Wira Adinata
+          </small>
+          <footer>— Dibuat dengan cinta dan React.js di HP</footer>
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+  </html>
