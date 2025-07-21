@@ -71,7 +71,7 @@
   <script type="text/babel">
     function GlitchTyping({ text, delay = 50 }) {
       const [display, setDisplay] = React.useState([]);
-      const chars = '░▒▓█▄▀▌■□▚▞▙▛▜▐▔▁▂▃▅▆▇';
+      const chars = '10';
       
       React.useEffect(() => {
         let current = [...text].map(c => (c === '\n' ? '\n' : ''));
